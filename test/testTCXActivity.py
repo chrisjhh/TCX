@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from TCX.TCXActivity import TCXActivity
 from TCX.TCXTraining import TCXTraining
 from TCX.TCXCreator import TCXCreator
+from TCX.TCXLap import TCXLap
 from .testData import getIntervalData
 
 class TestTCXDocument(unittest.TestCase):
@@ -42,6 +43,14 @@ class TestTCXDocument(unittest.TestCase):
         creator = act.creator
         self.assertTrue(isinstance(creator, TCXCreator))
         self.assertEqual(creator.name, "Polar Pacer Pro")
+
+    def test_laps(self):
+        act = TCXActivity(self.activity)
+        laps = act.laps()
+        self.assertEqual(len(laps), 64)
+        for l in laps:
+            self.assertTrue(isinstance(l, TCXLap))
+            self.assertEqual(l.parent, act.getroot())
 
 if __name__ == "__main__":
     unittest.main()
