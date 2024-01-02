@@ -17,7 +17,7 @@ class TCXLap(ET.ElementTree):
     def distance(self):
         dist = self.find("{*}DistanceMeters")
         if dist is None:
-            return 0
+            return 0.0
         return float(dist.text)
 
     @distance.setter
@@ -31,7 +31,7 @@ class TCXLap(ET.ElementTree):
     def totalTime(self):
         time = self.find("{*}TotalTimeSeconds")
         if time is None:
-            return None
+            return 0.0
         return float(time.text)
 
     @totalTime.setter
@@ -61,6 +61,13 @@ class TCXLap(ET.ElementTree):
         if el is None:
             return None
         return int(el.text)
+    
+    @calories.setter
+    def calories(self, value):
+        el = self.find("{*}Calories")
+        if el is None:
+            el = ET.SubElement(self.getroot(), "Calories")
+        el.text = str(int(value))
 
     @property
     def averageHeartRate(self):
