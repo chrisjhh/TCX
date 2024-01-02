@@ -102,3 +102,45 @@ class TCXLap(ET.ElementTree):
         if val is None:
             val = ET.SubElement(hr, "Value")
         val.text = str(int(value))
+
+    @property
+    def intensity(self):
+        el = self.find("{*}Intensity")
+        if el is None:
+            return None
+        return el.text
+    
+    @property
+    def cadence(self):
+        el = self.find("{*}Cadence")
+        if el is None:
+            return None
+        return int(el.text)
+    
+    @property
+    def triggerMethod(self):
+        el = self.find("{*}TriggerMethod")
+        if el is None:
+            return None
+        return el.text
+    
+    @property
+    def averageSpeed(self):
+        el = self.find("{*}Extensions/{*}LX/{*}AvgSpeed")
+        if el is None:
+            return None
+        return float(el.text)
+    
+    @property
+    def averagePower(self):
+        el = self.find("{*}Extensions/{*}LX/{*}AvgWatts")
+        if el is None:
+            return None
+        return int(el.text)
+    
+    @property
+    def maximumPower(self):
+        el = self.find("{*}Extensions/{*}LX/{*}MaxWatts")
+        if el is None:
+            return None
+        return int(el.text)

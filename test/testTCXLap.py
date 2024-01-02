@@ -181,6 +181,30 @@ class TestTCXDocument(unittest.TestCase):
         self.assertEqual(lap.find("{*}Calories").text, "640")
         self.assertEqual(lap.calories, 640)
 
+    def test_intensity(self):
+        lap = TCXLap(self.lap)
+        self.assertEqual(lap.intensity, "Active")
+
+    def test_cadence(self):
+        lap = TCXLap(self.lap)
+        self.assertEqual(lap.cadence, 87) 
+
+    def test_triggerMethod(self):
+        lap = TCXLap(self.lap)
+        self.assertEqual(lap.triggerMethod, "Manual")
+
+    def test_averageSpeed(self):
+        lap = TCXLap(self.lap)
+        self.assertAlmostEqual(lap.averageSpeed, 4.059, places=3)
+
+    def test_averagePower(self):
+        lap = TCXLap(self.lap)
+        self.assertEqual(lap.averagePower, 293)
+
+    def test_maximumPower(self):
+        lap = TCXLap(self.lap)
+        self.assertEqual(lap.maximumPower, 370)
+
     
 if __name__ == "__main__":
     unittest.main()
