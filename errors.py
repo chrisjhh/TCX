@@ -1,0 +1,3 @@
+
+class TCXFormatError(Exception):
+    pass
