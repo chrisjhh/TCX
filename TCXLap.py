@@ -1,10 +1,11 @@
-"""Class representing the Activities node of a TCX document"""
+"""Class representing a Lap node of a TCX document"""
 
 import xml.etree.ElementTree as ET
 from .errors import TCXFormatError
 from .utils import unqualifiedName
+from .TrackpointContainer import TrackpointContainer
 
-class TCXLap(ET.ElementTree):
+class TCXLap(ET.ElementTree, TrackpointContainer):
 
     def __init__(self, element: ET.Element, parent: ET.Element=None):
         """Parent is needed to split laps"""
@@ -109,6 +110,13 @@ class TCXLap(ET.ElementTree):
         if el is None:
             return None
         return el.text
+    
+    @intensity.setter
+    def intensity(self, value: str):
+        el = self.find("{*}Intensity")
+        if el is None:
+            el = ET.SubElement(self.getroot(), "Intensity")
+        el.text = value
     
     @property
     def cadence(self):

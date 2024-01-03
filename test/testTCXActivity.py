@@ -5,6 +5,7 @@ from TCX.TCXActivity import TCXActivity
 from TCX.TCXTraining import TCXTraining
 from TCX.TCXCreator import TCXCreator
 from TCX.TCXLap import TCXLap
+from TCX.TCXTrackpoint import TCXTrackpoint
 from .testData import getIntervalData
 
 class TestTCXDocument(unittest.TestCase):
@@ -51,6 +52,27 @@ class TestTCXDocument(unittest.TestCase):
         for l in laps:
             self.assertTrue(isinstance(l, TCXLap))
             self.assertEqual(l.parent, act.getroot())
+
+    def test_trackpoints(self):
+        act = TCXActivity(self.activity)
+        tps = act.trackpoints()
+        self.assertEqual(len(tps), 2671)
+        self.assertTrue(isinstance(tps[0], TCXTrackpoint))
+
+    def test_id(self):
+        act = TCXActivity(self.activity)
+        self.assertEqual(act.id, "2023-12-21T19:47:10.144Z")
+
+    def test_id_setter(self):
+        act = TCXActivity(self.activity)
+        act.id = "2023-12-21T19:48:00.000Z"
+        el = act.find("{*}Id")
+        self.assertEqual(el.text, "2023-12-21T19:48:00.000Z")
+        self.assertEqual(act.id, "2023-12-21T19:48:00.000Z")
+        act.id = "2023-12-21T19:47:10.144Z"
+        self.assertEqual(el.text, "2023-12-21T19:47:10.144Z")
+        self.assertEqual(act.id, "2023-12-21T19:47:10.144Z")
+
 
 if __name__ == "__main__":
     unittest.main()

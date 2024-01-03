@@ -2,6 +2,7 @@
 import unittest
 import xml.etree.ElementTree as ET
 from TCX.TCXLap import TCXLap
+from TCX.TCXTrackpoint import TCXTrackpoint
 from .testData import getIntervalData
 
 class TestTCXDocument(unittest.TestCase):
@@ -168,7 +169,7 @@ class TestTCXDocument(unittest.TestCase):
         self.assertEqual(lap.calories, 640)
 
     def test_calories_create(self):
-        # Remove the maxspeed element and check it is recreated by setter
+        # Remove the calories element and check it is recreated by setter
         lap = TCXLap(self.lap)
         cal = lap.calories
         el = lap.find("{*}Calories")
@@ -184,6 +185,31 @@ class TestTCXDocument(unittest.TestCase):
     def test_intensity(self):
         lap = TCXLap(self.lap)
         self.assertEqual(lap.intensity, "Active")
+
+    def test_intensity_setter(self):
+        lap = TCXLap(self.lap)
+        lap.intensity = "Inactive"
+        self.assertEqual(lap.find("{*}Intensity").text, "Inactive")
+        self.assertEqual(lap.intensity, "Inactive")
+        lap.intensity = "Active"
+        self.assertEqual(lap.find("{*}Intensity").text, "Active")
+        self.assertEqual(lap.intensity, "Active")
+
+    def test_intensity_create(self):
+        # Remove the intensity element and check it is recreated by setter
+        lap = TCXLap(self.lap)
+        intensity = lap.intensity
+        el = lap.find("{*}Intensity")
+        self.assertIsNotNone(el)
+        lap.getroot().remove(el)
+        self.assertIsNone(lap.intensity)
+        self.assertIsNone(lap.find("{*}Intensity"))
+        lap.intensity = intensity
+        self.assertIsNotNone(lap.find("{*}Intensity"))
+        self.assertEqual(lap.find("{*}Intensity").text, "Active")
+        self.assertEqual(lap.intensity, "Active")
+
+
 
     def test_cadence(self):
         lap = TCXLap(self.lap)
@@ -204,6 +230,12 @@ class TestTCXDocument(unittest.TestCase):
     def test_maximumPower(self):
         lap = TCXLap(self.lap)
         self.assertEqual(lap.maximumPower, 370)
+
+    def test_trackpoints(self):
+        lap = TCXLap(self.lap)
+        tps = lap.trackpoints()
+        self.assertEqual(len(tps), 44)
+        self.assertTrue(isinstance(tps[0], TCXTrackpoint))
 
     
 if __name__ == "__main__":

@@ -6,8 +6,9 @@ from .utils import unqualifiedName
 from .TCXTraining import TCXTraining
 from .TCXCreator import TCXCreator
 from .TCXLap import TCXLap
+from .TrackpointContainer import TrackpointContainer
 
-class TCXActivity(ET.ElementTree):
+class TCXActivity(ET.ElementTree, TrackpointContainer):
 
     def __init__(self, element: ET.Element):
         super().__init__(element)
@@ -34,7 +35,7 @@ class TCXActivity(ET.ElementTree):
         el = self.find("{*}Id")
         if el is None:
             raise TCXFormatError("No Activity Id element found")
-        el.value = value
+        el.text = value
 
     @property 
     def training(self):
