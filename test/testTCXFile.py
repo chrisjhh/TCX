@@ -34,6 +34,11 @@ class TestTCXFile(unittest.TestCase):
         except ElementDifference as e:
             self.fail(e)
 
+        # Just to be sure testEquals is working - make a small change
+        doc2.activity.laps()[0].distance = 0
+        with self.assertRaises(ElementDifference):
+            testEquals(doc.getroot(), doc2.getroot())
+
     def test_TCXFile(self):
         filename = getIntervalData()
         tcx = TCXFile(filename)
