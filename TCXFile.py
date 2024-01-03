@@ -18,7 +18,7 @@ def saveTCX(filename: str, doc: TCXDocument) -> None:
 class TCXFile(TCXDocument):
 
     def __init__(self, filename: str):
-        super().__init__(loadTCX(filename))
+        super().__init__(loadTCX(filename).getroot())
         self.filename = filename
 
     def save(self):

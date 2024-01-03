@@ -33,4 +33,31 @@ class TestTCXFile(unittest.TestCase):
             testEquals(doc.getroot(), doc2.getroot())
         except ElementDifference as e:
             self.fail(e)
+
+    def test_TCXFile(self):
+        filename = getIntervalData()
+        tcx = TCXFile(filename)
+        self.assertTrue(isinstance(tcx, TCXFile))
+        self.assertTrue(isinstance(tcx, TCXDocument))
+        self.assertEqual(tcx.activity.sport, "Running")
+        self.assertEqual(tcx.filename, filename)
+
+        # Save to a temp file
+        with tempfile.NamedTemporaryFile(delete_on_close=False) as fp:
+            fp.close()
+            tcx.saveAs(fp.name)
+            # Read it in again
+            tcx2 = TCXFile(fp.name)
+        # Temp file is now deleted
+
+        self.assertTrue(isinstance(tcx2, TCXFile))    
+        self.assertTrue(isinstance(tcx2, TCXDocument))
+        self.assertEqual(tcx2.activity.sport, "Running")
+        self.assertNotEqual(tcx.filename, tcx2.filename)
+        
+        # Check that saving and loading produces same result
+        try:
+            testEquals(tcx.getroot(), tcx2.getroot())
+        except ElementDifference as e:
+            self.fail(e)
         
