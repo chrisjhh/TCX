@@ -11,3 +11,6 @@ def getIntervalData() -> str:
     """Return the path name to the standard TCX testdata file with running intervals"""
     return getTestData("SG1_Track_Session_Earn_your_Turkey_.tcx")
 
+def getSwimData() -> str:
+    """Return the path name to the standard TCX swimming file needing correction"""
+    return getTestData("Lunch_Swim (4).tcx")

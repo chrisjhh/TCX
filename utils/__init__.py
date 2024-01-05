@@ -1,4 +1,3 @@
-
 def unqualifiedName(name: str) -> str:
     """Remove namespace qualifier from tagnames"""
     i = name.find('}')

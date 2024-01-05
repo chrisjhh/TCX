@@ -185,7 +185,7 @@ class TCXLap(ET.ElementTree, TrackpointContainer):
         track = self.find("{*}Track")
         if track is None:
             raise TCXFormatError("No Track subelement of Lap")
-        trackpoints = track.findall("{*}Trackpoints")
+        trackpoints = track.findall("{*}Trackpoint")
         npoints = len(trackpoints)
         if index < 0 or index >= npoints:
             raise IndexError("index to truncate lap is out of range. Given {}. Should be between {} and {}".format(index, 0, npoints - 1))
@@ -204,7 +204,7 @@ class TCXLap(ET.ElementTree, TrackpointContainer):
         track = self.find("{*}Track")
         if track is None:
             raise TCXFormatError("No Track subelement of Lap")
-        trackpoints = track.findall("{*}Trackpoints")
+        trackpoints = track.findall("{*}Trackpoint")
         npoints = len(trackpoints)
         if index < 0 or index >= npoints:
             raise IndexError("index to truncate lap is out of range. Given {}. Should be between {} and {}".format(index, 0, npoints - 1))

@@ -46,7 +46,7 @@ def splitLap(activity: ET.Element, lap: LapLike, index: int):
         # Make a deepcopy
         lap2 = copy.deepcopy(lap)
         # Insert it after original lap
-        activity.insert(lapIndex + 1, lap2)
+        activity.insert(lapIndex + 1, lap2.getroot())
         # Strip out the uneeded track points and update distance and times
         lap.truncate(index)
         lap2.trimStart(index)
