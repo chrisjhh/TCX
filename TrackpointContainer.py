@@ -1,9 +1,10 @@
 """Mixin class for elements containing Trackpoints"""
 from .TCXTrackpoint import TCXTrackpoint
+import xml.etree.ElementTree as ET
 
 class TrackpointContainer:
       
-    def trackpoints(self):
+    def trackpoints(self: ET.ElementTree):
         return [TCXTrackpoint(t) for t in self.findall(".//{*}Trackpoint")]
 
     def polyline(self):

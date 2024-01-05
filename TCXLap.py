@@ -1,9 +1,12 @@
 """Class representing a Lap node of a TCX document"""
 
 import xml.etree.ElementTree as ET
+import copy
 from .errors import TCXFormatError
 from .utils import unqualifiedName
 from .TrackpointContainer import TrackpointContainer
+from .TCXTrackpoint import TCXTrackpoint
+from .SplitMergeLaps import TCXSplitMergeError, mergeLaps, splitLap, splitLapAtDistance
 
 class TCXLap(ET.ElementTree, TrackpointContainer):
 
@@ -152,3 +155,65 @@ class TCXLap(ET.ElementTree, TrackpointContainer):
         if el is None:
             return None
         return int(el.text)
+    
+    def indexOfDistance(self, distance: float):
+        tps = self.trackpoints()
+        startDist = tps[0].distance
+        for i in range(len(tps)):
+            dist = tps[i].distance - startDist
+            if dist >= distance:
+                return i
+        # Not found
+        return -1
+    
+    def mergeWith(self, other):
+        if self.parent is None:
+            raise TCXSplitMergeError("Parent of lap is not set")
+        mergeLaps(self.parent, self, other)
+
+    def splitAtIndex(self, index: int):
+        if self.parent is None:
+            raise TCXSplitMergeError("Parent of lap is not set")
+        splitLap(self.parent, self, index)
+
+    def splitAtDistance(self, distance: float):
+        if self.parent is None:
+            raise TCXSplitMergeError("Parent of lap is not set")
+        splitLapAtDistance(self.parent, self, distance)
+    
+    def truncate(self, index: int):
+        track = self.find("{*}Track")
+        if track is None:
+            raise TCXFormatError("No Track subelement of Lap")
+        trackpoints = track.findall("{*}Trackpoints")
+        npoints = len(trackpoints)
+        if index < 0 or index >= npoints:
+            raise IndexError("index to truncate lap is out of range. Given {}. Should be between {} and {}".format(index, 0, npoints - 1))
+        toRemove = trackpoints[index:]
+    
+        for point in toRemove:
+            track.remove(point)
+        totalDistance = 0
+        totalTime = index
+        if index > 0:
+            totalDistance = TCXTrackpoint(trackpoints[index-1]).distance - TCXTrackpoint(trackpoints[0]).distance
+        self.distance = totalDistance
+        self.totalTime = totalTime
+
+    def trimStart(self, index: int):
+        track = self.find("{*}Track")
+        if track is None:
+            raise TCXFormatError("No Track subelement of Lap")
+        trackpoints = track.findall("{*}Trackpoints")
+        npoints = len(trackpoints)
+        if index < 0 or index >= npoints:
+            raise IndexError("index to truncate lap is out of range. Given {}. Should be between {} and {}".format(index, 0, npoints - 1))
+        toRemove = trackpoints[:index]
+        for point in toRemove:
+            track.remove(point)
+        totalDistance = 0
+        totalTime = npoints - index
+        if index < npoints:
+            totalDistance = TCXTrackpoint(trackpoints[-1]).distance - TCXTrackpoint(trackpoints[index]).distance
+        self.distance = totalDistance
+        self.totalTime = totalTime 
