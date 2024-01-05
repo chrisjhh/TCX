@@ -71,6 +71,23 @@ def CorrectLaps(laps: list[TCXLap], poolLength: float, targetTime: float):
         dist = ApplyCorrectedPoolLapIndexes(lap, indexes, poolLength, dist)
         lastLapZero = False
 
+def SpltLapsByTimes(tcx: TCXDocument, times: list[str]):
+    """Split laps by list of times in 'mm:ss' format"""
+    # Combine into single lap if not already
+    laps = tcx.activity.laps()
+    while len(laps) > 1:
+        lap1 = laps[0]
+        lap2 = laps[1]
+        lap1.mergeWith(lap2)
+        laps = tcx.activity.laps()
+    # Now split them by the times 
+    for t in times:
+        (m, s) = t.split(':')
+        secs = int(m) * 60 + int(s)
+        laps = tcx.activity.laps()
+        lastLap = laps[-1]
+        lastLap.splitAtIndex(secs)
+
 def CorrectSwimmingTCX(tcx: TCXDocument, poolLength: float, targetTime: float):
     tcx.activity.sport = "Swimming"
     laps = tcx.activity.laps()
