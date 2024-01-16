@@ -28,7 +28,7 @@ class TCXTrackpoint(ET.ElementTree):
                 # Nothing needs to be done
                 return
             # Add subelement and set distance in this
-            dist = ET.SubElement(self.element, "DistanceMeters")
+            dist = ET.SubElement(self.getroot(), "DistanceMeters")
             dist.text = str(float(value))
 
     @property
