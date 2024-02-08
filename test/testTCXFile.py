@@ -18,7 +18,7 @@ class TestTCXFile(unittest.TestCase):
         self.assertEqual(doc.activity.sport, "Running")
 
         # Save to a temp file
-        with tempfile.NamedTemporaryFile(delete_on_close=False) as fp:
+        with tempfile.NamedTemporaryFile() as fp:
             fp.close()
             saveTCX(fp.name, doc)
             # Read it in again
@@ -48,7 +48,7 @@ class TestTCXFile(unittest.TestCase):
         self.assertEqual(tcx.filename, filename)
 
         # Save to a temp file
-        with tempfile.NamedTemporaryFile(delete_on_close=False) as fp:
+        with tempfile.NamedTemporaryFile() as fp:
             fp.close()
             tcx.saveAs(fp.name)
             # Read it in again
